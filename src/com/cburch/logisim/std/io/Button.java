@@ -47,6 +47,7 @@ import com.cburch.logisim.instance.InstancePoker;
 import com.cburch.logisim.instance.InstanceState;
 import com.cburch.logisim.instance.Port;
 import com.cburch.logisim.instance.StdAttr;
+import com.cburch.logisim.tools.MessageBox;
 import com.cburch.logisim.util.GraphicsUtil;
 
 public class Button extends InstanceFactory {
@@ -67,6 +68,7 @@ public class Button extends InstanceFactory {
 	public static class Poker extends InstancePoker {
 		@Override
 		public void mousePressed(InstanceState state, MouseEvent e) {
+			if(e.getButton() == MouseEvent.NOBUTTON) return; // WTF?
 			boolean toggle = state.getInstance().getAttributeValue(ATTR_TOGGLE);
 			if(toggle) {
 				Value val = getValue(state);
@@ -81,6 +83,7 @@ public class Button extends InstanceFactory {
 
 		@Override
 		public void mouseReleased(InstanceState state, MouseEvent e) {
+			if(e.getButton() == MouseEvent.NOBUTTON) return; // WTF?
 			boolean toggle = state.getInstance().getAttributeValue(ATTR_TOGGLE);
 			if(!toggle)
 				setValue(state, Value.FALSE);
@@ -100,11 +103,7 @@ public class Button extends InstanceFactory {
 		private Value getValue(InstanceState state) {
 			InstanceDataSingleton data = (InstanceDataSingleton) state
 					.getData();
-			if(data == null) {
-				return Value.FALSE;
-			} else {
-				return (Value)data.getValue();
-			}
+			return data == null ? Value.FALSE : (Value) data.getValue();
 		}
 	}
 
