@@ -58,6 +58,7 @@ bin/
 .settings/
 .project
 .classpath
+.idea/
 
 
 # Simulation files and folders

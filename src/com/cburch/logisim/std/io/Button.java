@@ -37,12 +37,7 @@ import java.awt.event.MouseEvent;
 import com.bfh.logisim.fpgaboardeditor.FPGAIOInformationContainer;
 import com.bfh.logisim.hdlgenerator.IOComponentInformationContainer;
 import com.cburch.logisim.circuit.Wire;
-import com.cburch.logisim.data.Attribute;
-import com.cburch.logisim.data.AttributeSet;
-import com.cburch.logisim.data.Bounds;
-import com.cburch.logisim.data.Direction;
-import com.cburch.logisim.data.Location;
-import com.cburch.logisim.data.Value;
+import com.cburch.logisim.data.*;
 import com.cburch.logisim.instance.Instance;
 import com.cburch.logisim.instance.InstanceDataSingleton;
 import com.cburch.logisim.instance.InstanceFactory;
@@ -72,12 +67,23 @@ public class Button extends InstanceFactory {
 	public static class Poker extends InstancePoker {
 		@Override
 		public void mousePressed(InstanceState state, MouseEvent e) {
-			setValue(state, Value.TRUE);
+			boolean toggle = state.getInstance().getAttributeValue(ATTR_TOGGLE);
+			if(toggle) {
+				Value val = getValue(state);
+				if(val.equals(Value.FALSE))
+					setValue(state, Value.TRUE);
+				else if(val.equals(Value.TRUE))
+					setValue(state, Value.FALSE);
+			} else {
+				setValue(state, Value.TRUE);
+			}
 		}
 
 		@Override
 		public void mouseReleased(InstanceState state, MouseEvent e) {
-			setValue(state, Value.FALSE);
+			boolean toggle = state.getInstance().getAttributeValue(ATTR_TOGGLE);
+			if(!toggle)
+				setValue(state, Value.FALSE);
 		}
 
 		private void setValue(InstanceState state, Value val) {
@@ -90,17 +96,31 @@ public class Button extends InstanceFactory {
 			}
 			state.getInstance().fireInvalidated();
 		}
+
+		private Value getValue(InstanceState state) {
+			InstanceDataSingleton data = (InstanceDataSingleton) state
+					.getData();
+			if(data == null) {
+				return Value.FALSE;
+			} else {
+				return (Value)data.getValue();
+			}
+		}
 	}
 
 	private static final int DEPTH = 3;
+
+	static final Attribute<Boolean> ATTR_TOGGLE = Attributes.forBoolean(
+			"toggle", Strings.getter("buttonToggleAttr"));
 
 	public Button() {
 		super("Button", Strings.getter("buttonComponent"));
 		setAttributes(new Attribute[] { StdAttr.FACING, Io.ATTR_COLOR,
 				StdAttr.LABEL, Io.ATTR_LABEL_LOC, StdAttr.LABEL_FONT,
-				StdAttr.LABEL_COLOR, StdAttr.LABEL_VISIBILITY }, new Object[] { Direction.EAST,
+				StdAttr.LABEL_COLOR, StdAttr.LABEL_VISIBILITY, ATTR_TOGGLE },
+				new Object[] { Direction.EAST,
 				Color.WHITE, "", Direction.WEST, StdAttr.DEFAULT_LABEL_FONT,
-				StdAttr.DEFAULT_LABEL_COLOR,true });
+				StdAttr.DEFAULT_LABEL_COLOR, true, false });
 		setFacingAttribute(StdAttr.FACING);
 		setIconName("button.gif");
 		setPorts(new Port[] { new Port(0, 0, Port.OUTPUT, 1) });
