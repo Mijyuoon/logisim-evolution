@@ -39,10 +39,7 @@ import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 
 import com.cburch.logisim.circuit.CircuitState;
 import com.cburch.logisim.circuit.Simulator;
@@ -55,6 +52,7 @@ import com.cburch.logisim.gui.menu.LogisimMenuBar;
 import com.cburch.logisim.proj.Project;
 import com.cburch.logisim.proj.ProjectEvent;
 import com.cburch.logisim.proj.ProjectListener;
+import com.cburch.logisim.tools.MessageBox;
 import com.cburch.logisim.util.LocaleListener;
 import com.cburch.logisim.util.LocaleManager;
 import com.cburch.logisim.util.StringUtil;
@@ -71,6 +69,14 @@ public class LogFrame extends LFrame {
 						WindowEvent.WINDOW_CLOSING);
 				LogFrame.this.processWindowEvent(e);
 			} else if (src == chronogramButton) {
+				if(!LogFrame.this.selectionPanel.getHasSysclk()) {
+					String title = Strings.get("logFrameStartError");
+					String content = Strings.get("logFrameNoSysclk");
+					MessageBox msgBox = new MessageBox(title, content,
+							JOptionPane.ERROR_MESSAGE);
+					msgBox.show();
+					return;
+				}
 				project.getChronoFrame(true);
 				WindowEvent e = new WindowEvent(LogFrame.this,
 						WindowEvent.WINDOW_CLOSING);
@@ -171,6 +177,8 @@ public class LogFrame extends LFrame {
 
 	private JButton chronogramButton;
 
+	private SelectionPanel selectionPanel;
+
 	public LogFrame(Project project) {
 		this.project = project;
 		this.windowManager = new WindowMenuManager();
@@ -180,7 +188,9 @@ public class LogFrame extends LFrame {
 		setJMenuBar(new LogisimMenuBar(this, project));
 		setSimulator(project.getSimulator(), project.getCircuitState());
 
-		panels = new LogPanel[] { new SelectionPanel(this),
+		selectionPanel = new SelectionPanel(this);
+		panels = new LogPanel[] {
+				selectionPanel,
 		// new ScrollPanel(this),
 		// new FilePanel(this),
 		};

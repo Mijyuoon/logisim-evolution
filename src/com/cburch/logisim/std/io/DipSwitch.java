@@ -60,6 +60,7 @@ public class DipSwitch extends InstanceFactory {
 
 		@Override
 		public void mousePressed(InstanceState state, MouseEvent e) {
+			if(e.getButton() == MouseEvent.NOBUTTON) return; // WTF?
 			State val = (State) state.getData();
 			Location loc = state.getInstance().getLocation();
 			int cx = e.getX() - loc.getX() - 5;

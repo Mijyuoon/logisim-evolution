@@ -299,12 +299,24 @@ class SelectionPanel extends LogPanel {
 			}
 		}
 		chooseClkCombo.removeAll();
-		chooseClkCombo
-				.setModel(new DefaultComboBoxModel(allSelected.toArray()));
-		int defaultPos = allSelected.indexOf("clk");
-		if (defaultPos != -1) {
-			chooseClkCombo.setSelectedIndex(defaultPos);
+		chooseClkCombo.setModel(new DefaultComboBoxModel(allSelected.toArray()));
+		for(int i = 0; i < allSelected.size(); i++) {
+			String name = allSelected.get(i);
+			if(name.equalsIgnoreCase("clk")) {
+				chooseClkCombo.setSelectedIndex(i);
+				break;
+			}
 		}
+	}
+
+	public boolean getHasSysclk() {
+		Selection sel = getSelection();
+		for(int i = 0; i < sel.size(); i++) {
+			SelectionItem itm = sel.get(i);
+			if(itm.toString().equalsIgnoreCase("sysclk"))
+				return true;
+		}
+		return false;
 	}
 
 	@Override
