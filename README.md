@@ -5,9 +5,10 @@ My fork of [logisim-evolution](https://github.com/reds-heig/logisim-evolution), 
 
 ### Current improvements
 * Toggle option for Button IO element
+* Added "No sysclk" error message to chronogram setup window
 
 You can download the latest version here:
-* [Java JAR file](https://github.com/Mijyuoon/logisim-evolution/releases/download/v2.13.18a/logisim-evolution-v2.13.18a.jar)
+* [Java JAR file](https://github.com/Mijyuoon/logisim-evolution/releases/download/v2.13.19/logisim-evolution-v2.13.19.jar)
 
 Below is the contents of original README.md:
 
