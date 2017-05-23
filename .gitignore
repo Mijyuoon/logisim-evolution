@@ -59,7 +59,7 @@ bin/
 .project
 .classpath
 .idea/
-
+*.iml
 
 # Simulation files and folders
 resources/logisim/sim/comp.tcl
